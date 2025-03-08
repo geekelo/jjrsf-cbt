@@ -1,0 +1,187 @@
+/* Question Page Styling */
+.question-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    color: white;
+    text-align: center;
+  }
+  
+  .question-card {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 25px;
+    border-radius: 12px;
+    width: 50%;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+  
+  .question-text {
+    font-size: 18px;
+    margin: 15px 0;
+  }
+  
+  .options-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .option {
+    background: white;
+    color: black;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .option:hover {
+    background: #ff7e5f;
+    color: white;
+  }
+  
+  .option.selected {
+    background: #008080;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .nav-buttons {
+    display: flex;
+    justify-content:end;
+    margin-top: 20px;
+  }
+  
+  .nav-buttons button {
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  /* Timer Styles */
+.timer {
+  font-size: 20px;
+  font-weight: bold;
+  color: #28a745; /* Green for plenty of time */
+  text-align: center;
+  padding: 10px;
+  border: 2px solid #28a745;
+  border-radius: 8px;
+  width: fit-content;
+  margin: 10px auto;
+  background: #e9f5e9;
+  transition: color 0.5s ease, background 0.5s ease;
+  position: absolute;
+  top: 2px;
+  right: 30px;
+}
+/* Blur effect when modal is open */
+/* Modal Background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px); /* Blurred background */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Content */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  animation: scaleIn 0.3s ease-in-out forwards;
+}
+
+/* Modal Heading */
+.modal-content h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Score Display */
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Close Button */
+.modal-content button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.modal-content button:hover {
+  background: #45a049;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); }
+  to { transform: scale(1); }
+}
+
+/* Change color when time is running low */
+.timer.low-time {
+  color: #d9534f; /* Red when time is low */
+  border-color: #d9534f;
+  background: #fbeaea;
+  animation: blink 1s infinite alternate;
+}
+
+/* Blinking effect when time is almost out */
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+  
+  .nav-buttons button:hover {
+    background: #008080;
+    color: white;
+  }
+  
+  .nav-buttons button:disabled {
+    background: gray;
+    cursor: not-allowed;
+  }
+  
