@@ -1,76 +1,94 @@
 /* Question Page Styling */
 .question-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to right, #ff7e5f, #feb47b);
-    color: white;
-    text-align: center;
-  }
-  
-  .question-card {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 25px;
-    border-radius: 12px;
-    width: 50%;
-    backdrop-filter: blur(10px);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  h2 {
-    font-size: 22px;
-    margin-bottom: 10px;
-  }
-  
-  .question-text {
-    font-size: 18px;
-    margin: 15px 0;
-  }
-  
-  .options-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .option {
-    background: white;
-    color: black;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .option:hover {
-    background: #ff7e5f;
-    color: white;
-  }
-  
-  .option.selected {
-    background: #008080;
-    color: white;
-    font-weight: bold;
-  }
-  
-  .nav-buttons {
-    display: flex;
-    justify-content:end;
-    margin-top: 20px;
-  }
-  
-  .nav-buttons button {
-    background: #00ffcc;
-    color: black;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  /* Timer Styles */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  color: white;
+  text-align: center;
+}
+
+/* Card */
+.question-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  border-radius: 12px;
+  width: 50%;
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
+h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Question Text */
+.question-text {
+  font-size: 18px;
+  margin: 15px 0;
+}
+
+/* Options */
+.options-list {
+  list-style: none;
+  padding: 0;
+}
+
+.option {
+  background: white;
+  color: black;
+  padding: 12px;
+  margin: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #ff7e5f;
+  color: white;
+}
+
+.option.selected {
+  background: #008080;
+  color: white;
+  font-weight: bold;
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nav-buttons button {
+  background: #00ffcc;
+  color: black;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.nav-buttons button:hover {
+  background: #008080;
+  color: white;
+}
+
+.nav-buttons button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+/* Timer */
 .timer {
   font-size: 20px;
   font-weight: bold;
@@ -84,10 +102,28 @@
   background: #e9f5e9;
   transition: color 0.5s ease, background 0.5s ease;
   position: absolute;
-  top: 2px;
-  right: 30px;
+  top: 10px;
+  right: 20px;
 }
-/* Blur effect when modal is open */
+
+/* Timer Warning */
+.timer.low-time {
+  color: #d9534f; /* Red when time is low */
+  border-color: #d9534f;
+  background: #fbeaea;
+  animation: blink 1s infinite alternate;
+}
+
+/* Blinking effect */
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
 /* Modal Background */
 .modal {
   position: fixed;
@@ -95,11 +131,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(8px); /* Blurred background */
+  backdrop-filter: blur(8px);
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -109,6 +145,7 @@
   padding: 20px;
   border-radius: 10px;
   width: 350px;
+  max-width: 90%;
   text-align: center;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   transform: scale(0.9);
@@ -156,32 +193,70 @@
   to { transform: scale(1); }
 }
 
-/* Change color when time is running low */
-.timer.low-time {
-  color: #d9534f; /* Red when time is low */
-  border-color: #d9534f;
-  background: #fbeaea;
-  animation: blink 1s infinite alternate;
+/* 📌 Responsive Styles */
+@media (max-width: 768px) {
+  .question-card {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+
+  .option {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .timer {
+    font-size: 18px;
+    padding: 8px;
+    top: 10px;
+    right: 15px;
+  }
+
+  .modal-content {
+    width: 90%;
+    padding: 15px;
+  }
 }
 
-/* Blinking effect when time is almost out */
-@keyframes blink {
-  from {
-    opacity: 1;
+@media (max-width: 480px) {
+  .question-card {
+    width: 95%;
+    padding: 15px;
   }
-  to {
-    opacity: 0.6;
+
+  .question-text {
+    font-size: 15px;
+  }
+
+  .option {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-buttons button {
+    font-size: 14px;
+    padding: 10px 18px;
+    width: 100%;
+  }
+
+  .timer {
+    font-size: 16px;
+    padding: 6px;
+    top: 5px;
+    right: 10px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 12px;
   }
 }
-
-  
-  .nav-buttons button:hover {
-    background: #008080;
-    color: white;
-  }
-  
-  .nav-buttons button:disabled {
-    background: gray;
-    cursor: not-allowed;
-  }
-  
