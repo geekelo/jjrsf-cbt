@@ -1,24 +1,37 @@
 /* Question Page Styling */
 .question-container {
+ 
+  height: 100vh;
+  position: relative;
+  background: #1a1f36; 
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 25px 25px;
+  background-position: -10px -10px;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+ 
+}
+.question-box{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 20px;
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  color: white;
-  text-align: center;
 }
-
+.question-box h1{
+  padding: 45px;
+}
 /* Card */
 .question-card {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 25px;
+  background: white;
+  color: black;
+  padding: 45px;
   border-radius: 12px;
   width: 50%;
   max-width: 600px;
   backdrop-filter: blur(10px);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+ 
 }
 
 /* Headings */
@@ -39,47 +52,101 @@ h2 {
   padding: 0;
 }
 
+/* Option Item */
 .option {
-  background: white;
-  color: black;
-  padding: 12px;
-  margin: 10px;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  margin: 8px 0;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 18px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
 }
-
+.option strong {
+  position: absolute;
+  left: -35px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
 .option:hover {
-  background: #ff7e5f;
+  background: #442e79;
   color: white;
+ 
 }
 
 .option.selected {
-  background: #008080;
+   background: rgba(69, 46, 121, 0.85);
   color: white;
   font-weight: bold;
 }
 
+/* Correct Answer Styling */
+.correct {
+  background: #d4edda !important;
+  border-color: #28a745 !important;
+  color: #155724 !important;
+  font-weight: bold;
+}
+
+/* Wrong Answer Styling */
+.wrong {
+  background: #f8d7da !important;
+  border-color: #dc3545 !important;
+  color: #721c24 !important;
+  font-weight: bold;
+}
+
+/* Answer Feedback */
+.answer-feedback {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Correct Answer Feedback */
+.answer-feedback.correct-feedback {
+  background: #d4edda;
+  color: #155724;
+  border: 2px solid #28a745;
+}
+
+/* Wrong Answer Feedback */
+.answer-feedback.wrong-feedback {
+  background: #f8d7da;
+  color: #721c24;
+  border: 2px solid #dc3545;
+}
+
+
 /* Navigation Buttons */
 .nav-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content:end;
   margin-top: 20px;
 }
 
 .nav-buttons button {
-  background: #00ffcc;
-  color: black;
+  background: #442e79;
+  color: white;
   border: none;
   padding: 12px 24px;
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: background 0.1s ease-in-out;
 }
 
 .nav-buttons button:hover {
-  background: #008080;
+    background: rgba(69, 46, 121, 0.85);
   color: white;
 }
 
@@ -100,7 +167,7 @@ h2 {
   width: fit-content;
   margin: 10px auto;
   background: #e9f5e9;
-  transition: color 0.5s ease, background 0.5s ease;
+  transition: color 0.1s ease, background 0.1s ease;
   position: absolute;
   top: 10px;
   right: 20px;
@@ -168,18 +235,18 @@ h2 {
 
 /* Close Button */
 .modal-content button {
-  background: #4CAF50;
+  background: #442e79;
   color: white;
   border: none;
   padding: 10px 15px;
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.1s;
 }
 
 .modal-content button:hover {
-  background: #45a049;
+    background: rgba(69, 46, 121, 0.85);
 }
 
 /* Animations */
@@ -235,6 +302,8 @@ h2 {
   .option {
     font-size: 14px;
     padding: 8px;
+    width: 75%;
+    margin: 14px auto;
   }
 
   .nav-buttons {
@@ -258,5 +327,50 @@ h2 {
   .modal-content {
     width: 95%;
     padding: 12px;
+  }
+}
+
+
+/* 📌 Mobile Optimizations */
+@media (max-width: 768px) {
+  .question-card {
+    width: 90%;
+    padding: 4vw;
+  }
+
+  .option {
+    font-size: 14px;
+    padding: 3vw;
+  }
+
+  .timer {
+    font-size: 16px;
+    padding: 2vw;
+    top: 5px;
+    right: 10px;
+  }
+
+  .modal-content {
+    width: 85%;
+    padding: 4vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-card {
+    width: 90%;
+    padding: 3vw;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+  }
+
+  .nav-buttons button {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
   }
 }
