@@ -10,6 +10,7 @@ const Instructions = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);const startTest = async () => {
     const candidateData = JSON.parse(localStorage.getItem("candidate"));
+    console.log(candidateData)
   
     if (!candidateData || !candidateData.exam_code) {
       toast.error("Invalid candidate data. Please login again.", { position: "top-right" });

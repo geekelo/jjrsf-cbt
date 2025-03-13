@@ -9,6 +9,7 @@ const shuffleArray = (array) => {
     .map(({ item }) => item);
 };
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const QuestionPage = () => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -32,11 +33,7 @@ const QuestionPage = () => {
     const examEndTime = new Date(examData.end_time).getTime();
 
     if (currentTime < examStartTime) {
-      setModalMessage(
-        `The exam is scheduled for ${new Date(
-          examData.start_time
-        ).toLocaleString()}`
-      );
+      setModalMessage(`The exam is scheduled for ${new Date(examData.start_time).toLocaleString()}`);
       setShowModal(true);
       return;
     }
@@ -62,9 +59,7 @@ const QuestionPage = () => {
 
   useEffect(() => {
     if (questions.length > 0 && questions[currentIndex]?.clacbt_answers) {
-      setShuffledOptions(
-        shuffleArray([...questions[currentIndex].clacbt_answers])
-      );
+      setShuffledOptions(shuffleArray([...questions[currentIndex].clacbt_answers]));
     }
   }, [questions, currentIndex]);
 
@@ -76,33 +71,21 @@ const QuestionPage = () => {
 
   const handleOptionSelect = (selectedOpt) => {
     if (selectedOption) return;
-
+  
     setSelectedOption(selectedOpt);
     const currentQuestion = questions[currentIndex];
-    const correctAnswerObj = currentQuestion.clacbt_answers.find(
-      (ans) => ans.correct
-    );
-    const correctAnswerIndex = shuffledOptions.findIndex(
-      (opt) => opt.id === correctAnswerObj.id
-    );
-
+    const correctAnswerObj = currentQuestion.clacbt_answers.find((ans) => ans.correct);
+    const correctAnswerIndex = shuffledOptions.findIndex((opt) => opt.id === correctAnswerObj.id);
+  
     let newScore = score;
     if (selectedOpt.id === correctAnswerObj.id) {
       newScore += currentQuestion.mark;
       setScore(newScore);
-      setFeedbackMessage(
-        `✅ Correct! The correct answer is (${String.fromCharCode(
-          65 + correctAnswerIndex
-        )}): "${correctAnswerObj.answer_text}"`
-      );
+      setFeedbackMessage(`✅ Correct! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`);
     } else {
-      setFeedbackMessage(
-        `❌ Wrong! The correct answer is (${String.fromCharCode(
-          65 + correctAnswerIndex
-        )}): "${correctAnswerObj.answer_text}"`
-      );
+      setFeedbackMessage(`❌ Wrong! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`);
     }
-
+  
     setTimeout(() => {
       if (currentIndex < questions.length - 1) {
         setCurrentIndex((prev) => prev + 1);
@@ -113,17 +96,50 @@ const QuestionPage = () => {
       }
     }, 2000);
   };
-
-  const handleFinish = (finalScore = score) => {
+  const handleFinish = async (finalScore = score) => {
     if (questions.length > 0) {
       const totalMarks = questions.reduce((acc, q) => acc + q.mark, 0);
-      setModalMessage(
-        `Test Completed! Your Score: ${finalScore} / ${totalMarks}`
-      );
+      const examData = JSON.parse(localStorage.getItem("exam"));
+      const candidate = JSON.parse(localStorage.getItem("candidate"));
+  
+      if (!examData || !candidate) {
+        console.error("Exam or candidate data not found in local storage.");
+        return;
+      }
+  
+      const apiUrl = `${API_BASE_URL}/clacbt_exams/${examData.id}/clacbt_candidates/${candidate.id}`;
+  console.log(apiUrl)
+      const payload = {
+        clacbt_candidate: {
+          email: candidate.email,
+          score: finalScore,
+        },
+      };
+  
+      try {
+        const response = await fetch(apiUrl, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+  console.log(response)
+        if (!response.ok) {
+          throw new Error(`Failed to submit score: ${response.statusText}`);
+        }
+  
+        const result = await response.json();
+        console.log("Score submitted successfully:", result);
+      } catch (error) {
+        console.error("Error updating score:", error);
+      }
+  
+      setModalMessage(`Test Completed! Your Score: ${finalScore} / ${totalMarks}`);
       setShowModal(true);
     }
   };
+  
 
+  
   return (
     <div className="question-container">
       <h1>{JSON.parse(localStorage.getItem("exam"))?.name || "Exam"}</h1>
@@ -132,9 +148,7 @@ const QuestionPage = () => {
 
         {questions.length > 0 ? (
           <div className="question-card">
-            <h2>
-              Question {currentIndex + 1} of {questions.length}
-            </h2>
+            <h2>Question {currentIndex + 1} of {questions.length}</h2>
             <p className="question-text">{questions[currentIndex]?.question}</p>
             <ul className="options-list">
               {shuffledOptions.map((opt, index) => (
@@ -142,23 +156,14 @@ const QuestionPage = () => {
                   key={opt.id}
                   onClick={() => handleOptionSelect(opt)}
                   className={`option ${
-                    selectedOption?.id === opt.id
-                      ? opt.correct
-                        ? "correct"
-                        : "wrong"
-                      : ""
-                  } ${
-                    selectedOption && opt.correct ? "highlight-correct" : ""
-                  }`}
+                    selectedOption?.id === opt.id ? (opt.correct ? "correct" : "wrong") : ""
+                  } ${selectedOption && opt.correct ? "highlight-correct" : ""}`}
                 >
-                  <strong>{String.fromCharCode(65 + index)}.</strong>{" "}
-                  {opt.answer_text}
+                  <strong>{String.fromCharCode(65 + index)}.</strong> {opt.answer_text}
                 </li>
               ))}
             </ul>
-            {feedbackMessage && (
-              <p className="answer-feedback">{feedbackMessage}</p>
-            )}
+            {feedbackMessage && <p className="answer-feedback">{feedbackMessage}</p>}
           </div>
         ) : (
           <p className="no-questions">No questions available for this exam.</p>
