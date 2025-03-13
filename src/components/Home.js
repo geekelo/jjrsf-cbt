@@ -26,7 +26,7 @@ const Home = () => {
     setLoading(true);
 
     try {
-      const apiUrl = `${API_BASE_URL}/clacbt_candidates/check?exam_code=123456&email=${email}`;
+      const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=123456&email=${email}`;
       console.log("API URL:", apiUrl);
 
       const response = await axios.get(apiUrl);
