@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Instructions from "./components/Instructions";
 import QuestionPage from "./components/Question";
 import Layout from "./components/Layout";
+import HelpSection from "./components/Help";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/instructions" element={<Instructions />} />
           <Route path="/questions" element={<QuestionPage />} />
+          <Route path="/help" element={<HelpSection />} />
           {/* Redirect all unknown routes to Home */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
