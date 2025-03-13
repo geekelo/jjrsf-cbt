@@ -11,8 +11,8 @@ const Navbar = () => {
 
       <ul className="nav-links">
         <li>
-          <a href="#">
-            FAQs <HelpCircle className="faq-icon" size={38} />
+          <a href="/help">
+            Help <HelpCircle className="faq-icon" size={38} />
           </a>
         </li>
       </ul>
