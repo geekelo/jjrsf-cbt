@@ -70,7 +70,7 @@ const Instructions = () => {
           <li>🚫 Do not refresh or leave the page, as this may result in automatic submission.</li>
           <li>✅ Answer all questions carefully; you can navigate back and forth.</li>
           <li>📖 Read each question thoroughly before selecting an answer.</li>
-          <li>🎯 Click the <span className="font-bold px-2">Start</span> button when you are ready.</li>
+          <li>🎯 Click the START TEST button when you are ready.</li>
         </ul>
 
         <button className="start-btn" onClick={startTest} disabled={loading}>

@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# CBT Platform (Student Test Portal)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+The CBT (Computer-Based Test) Platform is a web-based application that allows students to take online exams in a timed and structured environment. The platform provides an intuitive and seamless experience for candidates to attempt multiple-choice, essay-based, and other types of questions while ensuring security and reliability.
 
-## Available Scripts
+## Features
+- **User Authentication:** Secure login and registration for students
+- **Exam Interface:** Timed exam sessions with auto-submit on timeout
+- **Question Navigation:** Easy navigation between questions
+- **Answer Submission:** Support for multiple-choice, essay, and file upload answers
+- **Live Countdown Timer:** Displays time left for the test
+- **Instant Feedback:** Optional results display upon completion
+- **Secure Exam Monitoring:** Prevents multiple logins and browser switching detection
+- **Result Tracking:** Students can view their exam scores (if enabled)
 
-In the project directory, you can run:
+## Installation
+### Prerequisites
+Ensure you have the following installed:
+- Node.js (>= 16.x)
+- npm or yarn
+- PostgreSQL (if using a database backend)
 
-### `npm start`
+### Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/cbt-platform.git
+   cd cbt-platform
+   ```
+2. Install dependencies:
+   ```sh
+   npm install  # or yarn install
+   ```
+3. Start the development server:
+   ```sh
+   npm start  # or yarn start
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Deployment
+### Docker
+1. Build and run the container:
+   ```sh
+   docker-compose up --build
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Vercel/Netlify
+1. Deploy using Vercel:
+   ```sh
+   vercel deploy
+   ```
+2. Deploy using Netlify:
+   ```sh
+   netlify deploy
+   ```
 
-### `npm test`
+## Environment Variables
+Create a `.env` file and configure the following:
+```
+REACT_APP_API_BASE_URL=https://api.cbt-platform.com
+REACT_APP_SOCKET_URL=wss://api.cbt-platform.com/socket
+REACT_APP_EXAM_DURATION=60 # Default exam duration in minutes
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## API Endpoints
+### Authentication
+- `POST /api/v1/login` - Student login
+- `POST /api/v1/register` - Student registration
 
-### `npm run build`
+### Exams
+- `GET /api/v1/exams` - Retrieve available exams
+- `POST /api/v1/exams/:id/start` - Begin an exam session
+- `POST /api/v1/exams/:id/submit` - Submit answers for an exam
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Results
+- `GET /api/v1/results` - View past results
+- `GET /api/v1/results/:exam_id` - View result for a specific exam
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature-name`)
+3. Commit changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature-name`)
+5. Create a Pull Request
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## License
+This project is licensed under the MIT License.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
