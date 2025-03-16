@@ -17,6 +17,7 @@ const App = () => {
           <Route path="/instructions" element={<Instructions />} />
           <Route path="/questions" element={<QuestionPage />} />
           <Route path="/help" element={<HelpSection />} />
+          <Route path="/:examCode" element={<Home />} /> {/* Add dynamic route */}
           {/* Redirect all unknown routes to Home */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

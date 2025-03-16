@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Home.css";
@@ -11,6 +11,16 @@ const Home = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { exam_code } = useParams(); // Get exam_code from URL
+
+  useEffect(() => {
+    if (exam_code && !/^\d{6}$/.test(exam_code)) {
+      toast.error("Invalid exam code!", { position: "top-right" });
+    }
+  
+    removeExpiredCandidate();
+  }, [exam_code]);
+  
 
   const validateAndCheckEmail = async () => {
     if (!email) {
@@ -23,10 +33,15 @@ const Home = () => {
       return;
     }
 
+    if (!/^\d{6}$/.test(exam_code)) {
+      toast.error("Invalid exam code!", { position: "top-right" });
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=123456&email=${email}`;
+      const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=${exam_code}&email=${email}`;
       console.log("API URL:", apiUrl);
 
       const response = await axios.get(apiUrl);
@@ -34,7 +49,6 @@ const Home = () => {
 
       if (response.data.message === "Candidate authorized") {
         const candidateData = response.data.candidate;
-
         localStorage.removeItem("candidate");
 
         const candidateWithExpiry = {
@@ -43,23 +57,15 @@ const Home = () => {
         };
         localStorage.setItem("candidate", JSON.stringify(candidateWithExpiry));
 
-        toast.success("Email verified! Redirecting...", {
-          position: "top-right",
-        });
+        toast.success("Email verified! Redirecting...", { position: "top-right" });
         setTimeout(() => navigate("/instructions"), 1500);
       } else {
-        toast.error(
-          "Invalid credentials. Please check your email or exam code.",
-          {
-            position: "top-right",
-          }
-        );
+        toast.error("Invalid credentials. Please check your email or exam code.", { position: "top-right" });
       }
     } catch (error) {
       console.error("Error verifying email:", error);
       toast.error(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again later.",
+        error.response?.data?.message || "Something went wrong. Please try again later.",
         { position: "top-right" }
       );
     } finally {
@@ -78,10 +84,6 @@ const Home = () => {
       }
     }
   };
-
-  React.useEffect(() => {
-    removeExpiredCandidate();
-  }, []);
 
   return (
     <div className="home-container">

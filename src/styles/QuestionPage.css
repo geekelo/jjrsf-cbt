@@ -50,7 +50,10 @@ h2 {
 .options-list {
   list-style: none;
   padding: 0;
+  max-height: 250px; /* Adjust as needed */
+  overflow-y: auto;
 }
+
 
 /* Option Item */
 .option {
@@ -268,8 +271,13 @@ h2 {
   }
 
   .question-text {
-    font-size: 16px;
+    font-size: 18px;
+    margin: 15px 0;
+    max-height: 150px; /* Adjust based on design preference */
+    overflow-y: auto;
+    padding-right: 10px;
   }
+  
 
   .option {
     font-size: 14px;
