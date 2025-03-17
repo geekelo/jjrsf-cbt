@@ -1,103 +1,105 @@
 /* General Styles */
 .help-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-    background: #12172b;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 0);
-    background-size: 20px 20px;
-    background-position: -10px -10px;
-    text-align: center;
-  }
-  
-  /* Title and Description */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #12172b;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.08) 1px,
+    transparent 0
+  );
+  background-size: 20px 20px;
+  background-position: -10px -10px;
+  text-align: center;
+}
+
+/* Title and Description */
+.help-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.help-description {
+  font-size: 18px;
+  color: #d1d1d1;
+  max-width: 600px;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* Card Layout */
+.help-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1000px;
+}
+
+/* Individual Card */
+.help-card {
+  background: linear-gradient(135deg, #242c47 0%, #1a1f36 100%);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.help-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Title */
+.help-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #e7d7ff;
+}
+
+/* Card Text */
+.help-card p {
+  font-size: 16px;
+  color: #d1d1d1;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .help-title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+    font-size: 28px;
   }
-  
   .help-description {
-    font-size: 18px;
-    color: #d1d1d1;
-    max-width: 600px;
-    margin-bottom: 25px;
-    line-height: 1.6;
-  }
-  
-  /* Card Layout */
-  .help-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    width: 90%;
-    max-width: 1000px;
-  }
-  
-  /* Individual Card */
-  .help-card {
-    background: linear-gradient(135deg, #242c47 0%, #1a1f36 100%);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: left;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-  }
-  
-  .help-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Card Title */
-  .help-card h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #e7d7ff;
-  }
-  
-  /* Card Text */
-  .help-card p {
     font-size: 16px;
-    color: #d1d1d1;
-    line-height: 1.5;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .help-title {
-      font-size: 28px;
-    }
-    .help-description {
-      font-size: 16px;
-    }
-    .help-card {
-      padding: 15px;
-    }
+  .help-card {
+    padding: 15px;
   }
-  
-  @media (max-width: 480px) {
-    .help-title {
-      font-size: 24px;
-    }
-    .help-description {
-      font-size: 14px;
-    }
-    .help-card h3 {
-      font-size: 18px;
-    }
-    .help-card p {
-      font-size: 14px;
-    }
+}
+
+@media (max-width: 480px) {
+  .help-title {
+    font-size: 24px;
   }
-  
+  .help-description {
+    font-size: 14px;
+  }
+  .help-card h3 {
+    font-size: 18px;
+  }
+  .help-card p {
+    font-size: 14px;
+  }
+}
