@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Home.css";
@@ -8,40 +8,50 @@ import "../styles/Home.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Home = () => {
+  const { exam_code } = useParams(); // Get exam code from URL
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (exam_code) {
+      if (!/^[a-zA-Z0-9]{6}$/.test(exam_code)) {
+        toast.error(
+          "Invalid exam code! It must be exactly 6 letters or digits.",
+          { position: "top-right" }
+        );
+      }
+    }
+  }, [exam_code]);
 
   const validateAndCheckEmail = async () => {
-    if (!email) {
+    if (!email.trim()) {
       toast.error("Please enter your email!", { position: "top-right" });
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+$/.test(email)) {
       toast.error("Invalid email format", { position: "top-right" });
       return;
     }
 
+    if (!exam_code || !/^[a-zA-Z0-9]{6}$/.test(exam_code)) {
+      toast.error("Invalid exam code!", { position: "top-right" });
+      return;
+    }
     setLoading(true);
 
     try {
-      const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=123456&email=${email}`;
-      console.log("API URL:", apiUrl);
-
+      const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=${exam_code}&email=${email}`;
       const response = await axios.get(apiUrl);
-      console.log("API Response:", response.data);
-
       if (response.data.message === "Candidate authorized") {
-        const candidateData = response.data.candidate;
-
-        localStorage.removeItem("candidate");
-
-        const candidateWithExpiry = {
-          ...candidateData,
-          timestamp: new Date().getTime(),
-        };
-        localStorage.setItem("candidate", JSON.stringify(candidateWithExpiry));
+        localStorage.setItem(
+          "candidate",
+          JSON.stringify({
+            ...response.data.candidate,
+            timestamp: new Date().getTime(),
+          })
+        );
 
         toast.success("Email verified! Redirecting...", {
           position: "top-right",
@@ -66,22 +76,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  const removeExpiredCandidate = () => {
-    const storedCandidate = localStorage.getItem("candidate");
-    if (storedCandidate) {
-      const { timestamp } = JSON.parse(storedCandidate);
-      const oneHour = 60 * 60 * 1000;
-      if (new Date().getTime() - timestamp > oneHour) {
-        localStorage.removeItem("candidate");
-        console.log("Candidate data expired and removed.");
-      }
-    }
-  };
-
-  React.useEffect(() => {
-    removeExpiredCandidate();
-  }, []);
 
   return (
     <div className="home-container">

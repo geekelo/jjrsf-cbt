@@ -50,7 +50,10 @@ h2 {
 .options-list {
   list-style: none;
   padding: 0;
+  max-height: 350px; 
+  overflow-y: auto;
 }
+
 
 /* Option Item */
 .option {
@@ -159,7 +162,7 @@ h2 {
 .timer {
   font-size: 20px;
   font-weight: bold;
-  color: #28a745; /* Green for plenty of time */
+  color: #28a745; 
   text-align: center;
   padding: 10px;
   border: 2px solid #28a745;
@@ -175,7 +178,7 @@ h2 {
 
 /* Timer Warning */
 .timer.low-time {
-  color: #d9534f; /* Red when time is low */
+  color: #d9534f; 
   border-color: #d9534f;
   background: #fbeaea;
   animation: blink 1s infinite alternate;
@@ -268,8 +271,13 @@ h2 {
   }
 
   .question-text {
-    font-size: 16px;
+    font-size: 18px;
+    margin: 15px 0;
+    max-height: 150px; 
+    overflow-y: auto;
+    padding-right: 10px;
   }
+  
 
   .option {
     font-size: 14px;
