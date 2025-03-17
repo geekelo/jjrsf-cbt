@@ -1,24 +1,27 @@
 /* Question Page Styling */
 .question-container {
- 
   height: 100vh;
   position: relative;
-  background: #1a1f36; 
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background: #1a1f36;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.1) 1px,
+    transparent 0
+  );
   background-size: 25px 25px;
   background-position: -10px -10px;
   color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
- 
+  padding-bottom: 28rem !important;
+  /* margin-bottom: 15rem; */
 }
-.question-box{
+.question-box {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.question-box h1{
+.question-box h1 {
   padding: 45px;
 }
 /* Card */
@@ -31,29 +34,30 @@
   max-width: 600px;
   backdrop-filter: blur(10px);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
- 
 }
 
 /* Headings */
 h2 {
   font-size: 24px;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 /* Question Text */
 .question-text {
   font-size: 18px;
-  margin: 15px 0;
+  margin: 0;
+  height: fit-content;
+  text-align: left;
 }
 
 /* Options */
 .options-list {
   list-style: none;
   padding: 0;
-  max-height: 350px; 
-  overflow-y: auto;
+  max-height: fit-content;
+  text-align: left;
 }
-
 
 /* Option Item */
 .option {
@@ -79,11 +83,10 @@ h2 {
 .option:hover {
   background: #442e79;
   color: white;
- 
 }
 
 .option.selected {
-   background: rgba(69, 46, 121, 0.85);
+  background: rgba(69, 46, 121, 0.85);
   color: white;
   font-weight: bold;
 }
@@ -108,9 +111,9 @@ h2 {
 .answer-feedback {
   font-size: 18px;
   font-weight: bold;
-  padding: 12px;
   border-radius: 8px;
   margin-top: 15px;
+  height: fit-content;
   display: inline-block;
   width: 100%;
 }
@@ -129,11 +132,10 @@ h2 {
   border: 2px solid #dc3545;
 }
 
-
 /* Navigation Buttons */
 .nav-buttons {
   display: flex;
-  justify-content:end;
+  justify-content: end;
   margin-top: 20px;
 }
 
@@ -149,7 +151,7 @@ h2 {
 }
 
 .nav-buttons button:hover {
-    background: rgba(69, 46, 121, 0.85);
+  background: rgba(69, 46, 121, 0.85);
   color: white;
 }
 
@@ -162,7 +164,7 @@ h2 {
 .timer {
   font-size: 20px;
   font-weight: bold;
-  color: #28a745; 
+  color: #28a745;
   text-align: center;
   padding: 10px;
   border: 2px solid #28a745;
@@ -178,7 +180,7 @@ h2 {
 
 /* Timer Warning */
 .timer.low-time {
-  color: #d9534f; 
+  color: #d9534f;
   border-color: #d9534f;
   background: #fbeaea;
   animation: blink 1s infinite alternate;
@@ -249,18 +251,26 @@ h2 {
 }
 
 .modal-content button:hover {
-    background: rgba(69, 46, 121, 0.85);
+  background: rgba(69, 46, 121, 0.85);
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.9); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* 📌 Responsive Styles */
@@ -273,11 +283,9 @@ h2 {
   .question-text {
     font-size: 18px;
     margin: 15px 0;
-    max-height: 150px; 
-    overflow-y: auto;
+    height: fit-content;
     padding-right: 10px;
   }
-  
 
   .option {
     font-size: 14px;
@@ -338,12 +346,11 @@ h2 {
   }
 }
 
-
 /* 📌 Mobile Optimizations */
 @media (max-width: 768px) {
   .question-card {
-    width: 90%;
-    padding: 4vw;
+    width: 80%;
+    padding: 3rem;
   }
 
   .option {
