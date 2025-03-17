@@ -8,32 +8,36 @@ import "../styles/Home.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Home = () => {
+  const { exam_code } = useParams(); // Get exam code from URL
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { exam_code } = useParams(); // Get exam_code from URL
 
   useEffect(() => {
-    if (exam_code && !/^\d{6}$/.test(exam_code)) {
-      toast.error("Invalid exam code!", { position: "top-right" });
+    console.log("Exam Code from URL:", exam_code);
+
+    if (exam_code) {
+      if (!/^[a-zA-Z0-9]{6}$/.test(exam_code)) {
+        toast.error("Invalid exam code! It must be exactly 6 letters or digits.", { position: "top-right" });
+      }
     }
-  
+    
+
     removeExpiredCandidate();
-  }, [exam_code]);
-  
+  }, [exam_code]); // Runs whenever exam_code changes
 
   const validateAndCheckEmail = async () => {
-    if (!email) {
+    if (!email.trim()) {
       toast.error("Please enter your email!", { position: "top-right" });
       return;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+$/.test(email)) {
       toast.error("Invalid email format", { position: "top-right" });
       return;
     }
 
-    if (!/^\d{6}$/.test(exam_code)) {
+    if (!exam_code || !/^[a-zA-Z0-9]{6}$/.test(exam_code)) {
       toast.error("Invalid exam code!", { position: "top-right" });
       return;
     }
@@ -48,19 +52,17 @@ const Home = () => {
       console.log("API Response:", response.data);
 
       if (response.data.message === "Candidate authorized") {
-        const candidateData = response.data.candidate;
-        localStorage.removeItem("candidate");
-
-        const candidateWithExpiry = {
-          ...candidateData,
-          timestamp: new Date().getTime(),
-        };
-        localStorage.setItem("candidate", JSON.stringify(candidateWithExpiry));
+        localStorage.setItem(
+          "candidate",
+          JSON.stringify({ ...response.data.candidate, timestamp: new Date().getTime() })
+        );
 
         toast.success("Email verified! Redirecting...", { position: "top-right" });
         setTimeout(() => navigate("/instructions"), 1500);
       } else {
-        toast.error("Invalid credentials. Please check your email or exam code.", { position: "top-right" });
+        toast.error("Invalid credentials. Please check your email or exam code.", {
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error("Error verifying email:", error);
@@ -99,11 +101,7 @@ const Home = () => {
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
         />
-        <button
-          className="proceed-btn"
-          onClick={validateAndCheckEmail}
-          disabled={loading}
-        >
+        <button className="proceed-btn" onClick={validateAndCheckEmail} disabled={loading}>
           {loading ? "Verifying..." : "Proceed"}
         </button>
       </div>

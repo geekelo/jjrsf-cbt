@@ -29,11 +29,12 @@ const QuestionPage = () => {
       return;
     }
     const currentTime = Date.now();
-    const examStartTime = new Date(examData.start_time).getTime();
-    const examEndTime = new Date(examData.end_time).getTime();
+    const examStartTime = new Date(examData.start_time).toISOString().replace("T", " ").split(".")[0];
+    const examEndTime = new Date(examData.end_time).toISOString().replace("T", " ").split(".")[0];
+  
 
     if (currentTime < examStartTime) {
-      setModalMessage(`The exam is scheduled for ${new Date(examData.start_time).toLocaleString()}`);
+      setModalMessage(`The exam is scheduled for ${new Date(examData.start_time)}`);
       setShowModal(true);
       return;
     }
@@ -108,7 +109,7 @@ const QuestionPage = () => {
       }
   
       const apiUrl = `${API_BASE_URL}/clacbt_exams/${examData.id}/clacbt_candidates/${candidate.id}`;
-  console.log(apiUrl)
+  
       const payload = {
         clacbt_candidate: {
           email: candidate.email,
@@ -122,19 +123,21 @@ const QuestionPage = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-  console.log(response)
+  
         if (!response.ok) {
           throw new Error(`Failed to submit score: ${response.statusText}`);
         }
   
-        const result = await response.json();
-        console.log("Score submitted successfully:", result);
+        console.log("Score submitted successfully:", await response.json());
       } catch (error) {
         console.error("Error updating score:", error);
       }
   
       setModalMessage(`Test Completed! Your Score: ${finalScore} / ${totalMarks}`);
       setShowModal(true);
+  
+      // Navigate to confirmation page after a delay
+      setTimeout(() => navigate("/confirmation"), 3000);
     }
   };
   

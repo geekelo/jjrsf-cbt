@@ -50,7 +50,7 @@ h2 {
 .options-list {
   list-style: none;
   padding: 0;
-  max-height: 250px; /* Adjust as needed */
+  max-height: 350px; /* Adjust as needed */
   overflow-y: auto;
 }
 

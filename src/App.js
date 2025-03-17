@@ -7,6 +7,7 @@ import Instructions from "./components/Instructions";
 import QuestionPage from "./components/Question";
 import Layout from "./components/Layout";
 import HelpSection from "./components/Help";
+import ConfirmationPage from "./components/Confirmation";
 
 const App = () => {
   return (
@@ -17,9 +18,11 @@ const App = () => {
           <Route path="/instructions" element={<Instructions />} />
           <Route path="/questions" element={<QuestionPage />} />
           <Route path="/help" element={<HelpSection />} />
-          <Route path="/:examCode" element={<Home />} /> {/* Add dynamic route */}
+          <Route path="/:exam_code" element={<Home />} />
+
           {/* Redirect all unknown routes to Home */}
           <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/confirmation" element={<ConfirmationPage />} />
         </Routes>
       </Layout>
     </Router>
