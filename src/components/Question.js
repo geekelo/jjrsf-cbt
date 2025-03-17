@@ -28,22 +28,25 @@ const QuestionPage = () => {
       navigate("/");
       return;
     }
-    const currentTime = Date.now();
-    const examStartTime = new Date(examData.start_time).toISOString().replace("T", " ").split(".")[0];
-    const examEndTime = new Date(examData.end_time).toISOString().replace("T", " ").split(".")[0];
-  
+    const currentTimeISO = new Date().toISOString().replace("T", " ").split(".")[0];
+const examStartTime = new Date(examData.start_time).toISOString().replace("T", " ").split(".")[0];
+const examEndTime = new Date(examData.end_time).toISOString().replace("T", " ").split(".")[0];
 
-    if (currentTime < examStartTime) {
-      setModalMessage(`The exam is scheduled for ${new Date(examData.start_time)}`);
-      setShowModal(true);
-      return;
-    }
+console.log("Current Time:", currentTimeISO);
+console.log("Exam Start Time:", examStartTime);
+console.log("Exam End Time:", examEndTime);
 
-    if (currentTime > examEndTime) {
-      setModalMessage("This exam has expired. Please contact support.");
-      setShowModal(true);
-      return;
-    }
+if (currentTimeISO < examStartTime) {
+  setModalMessage(`The exam is scheduled for ${new Date(examData.start_time)}`);
+  setShowModal(true);
+  return;
+}
+
+if (currentTimeISO > examEndTime) {
+  setModalMessage("This exam has expired. Please contact support.");
+  setShowModal(true);
+  return;
+}
 
     setTimeLeft(examData.duration * 60);
     setQuestions(shuffleArray(examData.clacbt_questions || []));

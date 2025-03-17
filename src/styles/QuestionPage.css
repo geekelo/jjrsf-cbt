@@ -59,6 +59,7 @@ h2 {
   text-align: left;
 }
 
+
 /* Option Item */
 .option {
   display: flex;
@@ -286,6 +287,7 @@ h2 {
     height: fit-content;
     padding-right: 10px;
   }
+  
 
   .option {
     font-size: 14px;
