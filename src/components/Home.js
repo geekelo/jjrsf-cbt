@@ -14,17 +14,15 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Exam Code from URL:", exam_code);
-
     if (exam_code) {
       if (!/^[a-zA-Z0-9]{6}$/.test(exam_code)) {
-        toast.error("Invalid exam code! It must be exactly 6 letters or digits.", { position: "top-right" });
+        toast.error(
+          "Invalid exam code! It must be exactly 6 letters or digits.",
+          { position: "top-right" }
+        );
       }
     }
-    
-
-    removeExpiredCandidate();
-  }, [exam_code]); // Runs whenever exam_code changes
+  }, [exam_code]);
 
   const validateAndCheckEmail = async () => {
     if (!email.trim()) {
@@ -41,49 +39,41 @@ const Home = () => {
       toast.error("Invalid exam code!", { position: "top-right" });
       return;
     }
-
     setLoading(true);
 
     try {
       const apiUrl = `${API_BASE_URL}/clacbt_check_candidates/check?exam_code=${exam_code}&email=${email}`;
-      console.log("API URL:", apiUrl);
-
       const response = await axios.get(apiUrl);
-      console.log("API Response:", response.data);
-
       if (response.data.message === "Candidate authorized") {
         localStorage.setItem(
           "candidate",
-          JSON.stringify({ ...response.data.candidate, timestamp: new Date().getTime() })
+          JSON.stringify({
+            ...response.data.candidate,
+            timestamp: new Date().getTime(),
+          })
         );
 
-        toast.success("Email verified! Redirecting...", { position: "top-right" });
-        setTimeout(() => navigate("/instructions"), 1500);
-      } else {
-        toast.error("Invalid credentials. Please check your email or exam code.", {
+        toast.success("Email verified! Redirecting...", {
           position: "top-right",
         });
+        setTimeout(() => navigate("/instructions"), 1500);
+      } else {
+        toast.error(
+          "Invalid credentials. Please check your email or exam code.",
+          {
+            position: "top-right",
+          }
+        );
       }
     } catch (error) {
       console.error("Error verifying email:", error);
       toast.error(
-        error.response?.data?.message || "Something went wrong. Please try again later.",
+        error.response?.data?.message ||
+          "Something went wrong. Please try again later.",
         { position: "top-right" }
       );
     } finally {
       setLoading(false);
-    }
-  };
-
-  const removeExpiredCandidate = () => {
-    const storedCandidate = localStorage.getItem("candidate");
-    if (storedCandidate) {
-      const { timestamp } = JSON.parse(storedCandidate);
-      const oneHour = 60 * 60 * 1000;
-      if (new Date().getTime() - timestamp > oneHour) {
-        localStorage.removeItem("candidate");
-        console.log("Candidate data expired and removed.");
-      }
     }
   };
 
@@ -101,7 +91,11 @@ const Home = () => {
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
         />
-        <button className="proceed-btn" onClick={validateAndCheckEmail} disabled={loading}>
+        <button
+          className="proceed-btn"
+          onClick={validateAndCheckEmail}
+          disabled={loading}
+        >
           {loading ? "Verifying..." : "Proceed"}
         </button>
       </div>

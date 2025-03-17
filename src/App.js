@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 
 import "./App.css";
 import Home from "./components/Home";
@@ -19,10 +24,8 @@ const App = () => {
           <Route path="/questions" element={<QuestionPage />} />
           <Route path="/help" element={<HelpSection />} />
           <Route path="/:exam_code" element={<Home />} />
-
-          {/* Redirect all unknown routes to Home */}
-          <Route path="*" element={<Navigate to="/" />} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>
     </Router>
