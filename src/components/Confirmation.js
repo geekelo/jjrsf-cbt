@@ -1,10 +1,7 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
 import "../styles/ConfirmationPage.css"; 
 
 const ConfirmationPage = () => {
-  const navigate = useNavigate();
-
+ 
   return (
     <div className="confirmation-container">
       <h1>🎉 Congratulations! 🎉</h1>
