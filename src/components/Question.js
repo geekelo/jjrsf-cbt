@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import  { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/QuestionPage.css";
 
@@ -12,15 +12,19 @@ const shuffleArray = (array) => {
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const QuestionPage = () => {
   const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [feedbackMessage, setFeedbackMessage] = useState("");
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [shuffledOptionsByQuestionId, setShuffledOptionsByQuestionId] = useState({});
+  const [selectedOptionByQuestionId, setSelectedOptionByQuestionId] = useState({});
+  const [feedbackByQuestionId, setFeedbackByQuestionId] = useState({});
   const [timeLeft, setTimeLeft] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
 
   useEffect(() => {
     const examData = JSON.parse(localStorage.getItem("exam"));
@@ -48,8 +52,18 @@ if (currentTimeISO > examEndTime) {
   return;
 }
 
+    const shuffledQuestions = shuffleArray(examData.clacbt_questions || []);
     setTimeLeft(examData.duration * 60);
-    setQuestions(shuffleArray(examData.clacbt_questions || []));
+    setQuestions(shuffledQuestions);
+    setShuffledOptionsByQuestionId(
+      shuffledQuestions.reduce((acc, q) => {
+        acc[q.id] = shuffleArray([...(q.clacbt_answers || [])]);
+        return acc;
+      }, {})
+    );
+    setSelectedOptionByQuestionId({});
+    setFeedbackByQuestionId({});
+    setScore(0);
   }, [navigate]);
 
   useEffect(() => {
@@ -61,46 +75,47 @@ if (currentTimeISO > examEndTime) {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  useEffect(() => {
-    if (questions.length > 0 && questions[currentIndex]?.clacbt_answers) {
-      setShuffledOptions(shuffleArray([...questions[currentIndex].clacbt_answers]));
-    }
-  }, [questions, currentIndex]);
-
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  const handleOptionSelect = (selectedOpt) => {
-    if (selectedOption) return;
-  
-    setSelectedOption(selectedOpt);
-    const currentQuestion = questions[currentIndex];
-    const correctAnswerObj = currentQuestion.clacbt_answers.find((ans) => ans.correct);
-    const correctAnswerIndex = shuffledOptions.findIndex((opt) => opt.id === correctAnswerObj.id);
-  
-    let newScore = score;
-    if (selectedOpt.id === correctAnswerObj.id) {
-      newScore += currentQuestion.mark;
-      setScore(newScore);
-      setFeedbackMessage(`✅ Correct! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`);
+  const answeredCount = useMemo(() => {
+    return Object.keys(selectedOptionByQuestionId).length;
+  }, [selectedOptionByQuestionId]);
+
+  const handleOptionSelect = (question, selectedOpt) => {
+    if (!question?.id) return;
+    if (selectedOptionByQuestionId[question.id]) return;
+
+    const options = shuffledOptionsByQuestionId[question.id] || [];
+    const correctAnswerObj = (question.clacbt_answers || []).find((ans) => ans.correct);
+    const correctAnswerIndex =
+      correctAnswerObj ? options.findIndex((opt) => opt.id === correctAnswerObj.id) : -1;
+
+    setSelectedOptionByQuestionId((prev) => ({ ...prev, [question.id]: selectedOpt }));
+
+    if (correctAnswerObj && selectedOpt.id === correctAnswerObj.id) {
+      setScore((prev) => prev + (question.mark || 0));
+      setFeedbackByQuestionId((prev) => ({
+        ...prev,
+        [question.id]: `✅ Correct! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`,
+      }));
+    } else if (correctAnswerObj) {
+      setFeedbackByQuestionId((prev) => ({
+        ...prev,
+        [question.id]: `❌ Wrong! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`,
+      }));
     } else {
-      setFeedbackMessage(`❌ Wrong! The correct answer is (${String.fromCharCode(65 + correctAnswerIndex)}): "${correctAnswerObj.answer_text}"`);
+      setFeedbackByQuestionId((prev) => ({
+        ...prev,
+        [question.id]: `Saved your answer.`,
+      }));
     }
-  
-    setTimeout(() => {
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex((prev) => prev + 1);
-        setSelectedOption(null);
-        setFeedbackMessage("");
-      } else {
-        handleFinish(newScore);
-      }
-    }, 2000);
   };
-  const handleFinish = async (finalScore = score) => {
+
+  const handleFinish = async (finalScore = scoreRef.current) => {
     if (questions.length > 0) {
       const totalMarks = questions.reduce((acc, q) => acc + q.mark, 0);
       const examData = JSON.parse(localStorage.getItem("exam"));
@@ -153,23 +168,52 @@ if (currentTimeISO > examEndTime) {
         <div className="timer">Time Left: {formatTime(timeLeft)}</div>
 
         {questions.length > 0 ? (
-          <div className="question-card">
-            <h2>Question {currentIndex + 1} of {questions.length}</h2>
-            <p className="question-text">{questions[currentIndex]?.question}</p>
-            <ul className="options-list">
-              {shuffledOptions.map((opt, index) => (
-                <li
-                  key={opt.id}
-                  onClick={() => handleOptionSelect(opt)}
-                  className={`option ${
-                    selectedOption?.id === opt.id ? (opt.correct ? "correct" : "wrong") : ""
-                  } ${selectedOption && opt.correct ? "highlight-correct" : ""}`}
-                >
-                  <strong>{String.fromCharCode(65 + index)}.</strong> {opt.answer_text}
-                </li>
-              ))}
-            </ul>
-            {feedbackMessage && <p className="answer-feedback">{feedbackMessage}</p>}
+          <div className="questions-list">
+            <div className="questions-meta">
+              <div className="questions-progress">
+                Answered: {answeredCount} / {questions.length} (Score: {score})
+              </div>
+              <button
+                className="finish-button"
+                onClick={() => handleFinish()}
+                disabled={showModal}
+              >
+                Finish / Submit
+              </button>
+            </div>
+
+            {questions.map((q, qIndex) => {
+              const selected = selectedOptionByQuestionId[q.id];
+              const options = shuffledOptionsByQuestionId[q.id] || [];
+              const correctAnswerObj = (q.clacbt_answers || []).find((ans) => ans.correct);
+
+              return (
+                <div key={q.id || qIndex} className="question-card">
+                  <h2>Question {qIndex + 1} of {questions.length}</h2>
+                  <p className="question-text">{q?.question}</p>
+                  <ul className="options-list">
+                    {options.map((opt, index) => {
+                      const isSelected = selected?.id === opt.id;
+                      const isCorrect = !!opt.correct;
+                      return (
+                        <li
+                          key={opt.id}
+                          onClick={() => handleOptionSelect(q, opt)}
+                          className={`option ${
+                            isSelected ? (isCorrect ? "correct" : "wrong") : ""
+                          } ${selected && correctAnswerObj && isCorrect ? "highlight-correct" : ""}`}
+                        >
+                          <strong>{String.fromCharCode(65 + index)}.</strong> {opt.answer_text}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {feedbackByQuestionId[q.id] && (
+                    <p className="answer-feedback">{feedbackByQuestionId[q.id]}</p>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="no-questions">No questions available for this exam.</p>
