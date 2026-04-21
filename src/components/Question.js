@@ -1,4 +1,4 @@
-import  { useState, useEffect, useMemo, useRef } from "react";
+import  { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/QuestionPage.css";
 
@@ -66,6 +66,53 @@ if (currentTimeISO > examEndTime) {
     setScore(0);
   }, [navigate]);
 
+  const handleFinish = useCallback(
+    async (finalScore = scoreRef.current) => {
+      if (questions.length > 0) {
+        const totalMarks = questions.reduce((acc, q) => acc + q.mark, 0);
+        const examData = JSON.parse(localStorage.getItem("exam"));
+        const candidate = JSON.parse(localStorage.getItem("candidate"));
+    
+        if (!examData || !candidate) {
+          console.error("Exam or candidate data not found in local storage.");
+          return;
+        }
+    
+        const apiUrl = `${API_BASE_URL}/clacbt_exams/${examData.id}/clacbt_candidates/${candidate.id}`;
+    
+        const payload = {
+          clacbt_candidate: {
+            email: candidate.email,
+            score: finalScore,
+          },
+        };
+    
+        try {
+          const response = await fetch(apiUrl, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Failed to submit score: ${response.statusText}`);
+          }
+    
+          console.log("Score submitted successfully:", await response.json());
+        } catch (error) {
+          console.error("Error updating score:", error);
+        }
+    
+        setModalMessage(`Test Completed! Your Score: ${finalScore} / ${totalMarks}`);
+        setShowModal(true);
+    
+        // Navigate to confirmation page after a delay
+        setTimeout(() => navigate("/confirmation"), 3000);
+      }
+    },
+    [navigate, questions]
+  );
+
   useEffect(() => {
     if (timeLeft <= 0) {
       handleFinish();
@@ -73,7 +120,7 @@ if (currentTimeISO > examEndTime) {
     }
     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [handleFinish, timeLeft]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -112,50 +159,6 @@ if (currentTimeISO > examEndTime) {
         ...prev,
         [question.id]: `Saved your answer.`,
       }));
-    }
-  };
-
-  const handleFinish = async (finalScore = scoreRef.current) => {
-    if (questions.length > 0) {
-      const totalMarks = questions.reduce((acc, q) => acc + q.mark, 0);
-      const examData = JSON.parse(localStorage.getItem("exam"));
-      const candidate = JSON.parse(localStorage.getItem("candidate"));
-  
-      if (!examData || !candidate) {
-        console.error("Exam or candidate data not found in local storage.");
-        return;
-      }
-  
-      const apiUrl = `${API_BASE_URL}/clacbt_exams/${examData.id}/clacbt_candidates/${candidate.id}`;
-  
-      const payload = {
-        clacbt_candidate: {
-          email: candidate.email,
-          score: finalScore,
-        },
-      };
-  
-      try {
-        const response = await fetch(apiUrl, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-  
-        if (!response.ok) {
-          throw new Error(`Failed to submit score: ${response.statusText}`);
-        }
-  
-        console.log("Score submitted successfully:", await response.json());
-      } catch (error) {
-        console.error("Error updating score:", error);
-      }
-  
-      setModalMessage(`Test Completed! Your Score: ${finalScore} / ${totalMarks}`);
-      setShowModal(true);
-  
-      // Navigate to confirmation page after a delay
-      setTimeout(() => navigate("/confirmation"), 3000);
     }
   };
   
