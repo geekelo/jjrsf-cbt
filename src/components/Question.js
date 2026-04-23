@@ -189,13 +189,12 @@ if (currentTimeISO > examEndTime) {
                   </div>
                 )}
               </div>
-              <button
-                className="finish-button"
-                onClick={() => handleFinish()}
+              <div
+                className="finish-button-container"
                 disabled={submitted || submitting}
               >
-                {submitting ? "Submitting..." : submitted ? "Submitted" : "Finish / Submit"}
-              </button>
+                {submitting ? "Submitting..." : submitted ? "Submitted" : ""}
+              </div>
             </div>
 
             {questions.map((q, qIndex) => {
