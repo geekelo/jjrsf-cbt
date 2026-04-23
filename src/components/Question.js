@@ -182,6 +182,12 @@ if (currentTimeISO > examEndTime) {
             <div className="questions-meta">
               <div className="questions-progress">
                 Answered: {answeredCount} / {questions.length}
+                {!submitted && (
+                  <div className="questions-note">
+                    Note: Please ensure you have answered all questions and crosschecked your
+                    answers before submitting.
+                  </div>
+                )}
               </div>
               <button
                 className="finish-button"
@@ -241,6 +247,17 @@ if (currentTimeISO > examEndTime) {
                 </div>
               );
             })}
+
+            <div className="questions-meta questions-meta-bottom">
+              <div className="questions-progress" />
+              <button
+                className="finish-button"
+                onClick={() => handleFinish()}
+                disabled={submitted || submitting}
+              >
+                {submitting ? "Submitting..." : submitted ? "Submitted" : "Finish / Submit"}
+              </button>
+            </div>
           </div>
         ) : (
           <p className="no-questions">No questions available for this exam.</p>

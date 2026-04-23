@@ -61,6 +61,20 @@
   text-align: left;
 }
 
+.questions-note {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.95;
+  line-height: 1.35;
+  max-width: 520px;
+}
+
+.questions-meta-bottom {
+  margin-top: 6px;
+  padding-bottom: 10px;
+}
+
 .finish-button {
   background: #442e79;
   color: white;

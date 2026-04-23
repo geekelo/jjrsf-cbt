@@ -68,7 +68,8 @@ const Instructions = () => {
         <ul className="instructions-list">
           <li>⏳ The test is timed. Complete all questions before time runs out.</li>
           <li>🚫 Do not refresh or leave the page, as this may result in automatic submission.</li>
-          <li>✅ Answer all questions carefully; you can navigate back and forth.</li>
+          <li>✅ Answer all questions carefully; you can scroll up and down.</li>
+          <li>📝 Ensure you have answered all questions and crosschecked your answers before submitting.</li>
           <li>📖 Read each question thoroughly before selecting an answer.</li>
           <li>🎯 Click the START TEST button when you are ready.</li>
         </ul>
