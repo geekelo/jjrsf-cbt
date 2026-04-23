@@ -21,6 +21,7 @@ const QuestionPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [finalScore, setFinalScore] = useState(null);
   const scoreRef = useRef(0); // holds latest computed final score after submit
+  const resultsRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,7 +89,6 @@ if (currentTimeISO > examEndTime) {
         scoreRef.current = computed;
         setFinalScore(computed);
         setSubmitted(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
 
         const examData = JSON.parse(localStorage.getItem("exam"));
         const candidate = JSON.parse(localStorage.getItem("candidate"));
@@ -131,6 +131,14 @@ if (currentTimeISO > examEndTime) {
   );
 
   useEffect(() => {
+    if (!submitted) return;
+    // Wait for the results section to render, then scroll to it.
+    requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [submitted]);
+
+  useEffect(() => {
     if (submitted) return;
     if (timeLeft <= 0) {
       handleFinish();
@@ -167,18 +175,6 @@ if (currentTimeISO > examEndTime) {
 
         {questions.length > 0 ? (
           <div className="questions-list">
-            {submitted && (
-              <div className="results-summary">
-                <div className="results-title">Results</div>
-                <div className="results-score">
-                  Score: {finalScore ?? scoreRef.current} / {totalMarks}
-                </div>
-                <div className="results-subtext">
-                  You answered {answeredCount} / {questions.length}.
-                </div>
-              </div>
-            )}
-
             <div className="questions-meta">
               <div className="questions-progress">
                 Answered: {answeredCount} / {questions.length}
@@ -257,6 +253,18 @@ if (currentTimeISO > examEndTime) {
                 {submitting ? "Submitting..." : submitted ? "Submitted" : "Finish / Submit"}
               </button>
             </div>
+
+            {submitted && (
+              <div ref={resultsRef} className="results-summary">
+                <div className="results-title">Results</div>
+                <div className="results-score">
+                  Score: {finalScore ?? scoreRef.current} / {totalMarks}
+                </div>
+                <div className="results-subtext">
+                  You answered {answeredCount} / {questions.length}.
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <p className="no-questions">No questions available for this exam.</p>
